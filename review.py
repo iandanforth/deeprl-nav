@@ -6,7 +6,7 @@ import torch
 import argparse
 import numpy as np
 from random import randint
-from dqn_agent import Agent
+from udrlnd.dqn_agent import Agent
 from peel import Peel
 from unityagents import UnityEnvironment
 

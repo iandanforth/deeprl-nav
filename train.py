@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from random import randint
 from collections import deque
-from dqn_agent import Agent
+from udrlnd.dqn_agent import Agent
 from peel import Peel
 from unityagents import UnityEnvironment
 
@@ -31,6 +31,9 @@ def dqn(
 ):
     """
     DQN Code from Udacity Deep Reinforcement Learning Course
+    See udrlnd/LICENSE.md for full MIT license.
+
+    Slightly Modified by Ian Danforth
 
     Deep Q-Learning.
 

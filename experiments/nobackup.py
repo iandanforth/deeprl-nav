@@ -16,7 +16,8 @@ from unityagents import UnityEnvironment
 
 parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent)
-from dqn_agent import Agent
+from udrlnd.dqn_agent import Agent
+from peel import Peel
 
 
 def print_update(episode, score, duration, newline=False):
@@ -48,7 +49,9 @@ def dqn(
     solve_score=13,
     use_min=False
 ):
-    """Deep Q-Learning.
+    """
+    DQN Code from Udacity Deep Reinforcement Learning Course
+    See udrlnd/LICENSE.md for full MIT license.
 
     Params
     ======
@@ -98,49 +101,6 @@ def dqn(
     return scores
 
 
-class SimpleGymWrapper(object):
-
-    def __init__(self, unity_env):
-        """
-        A thin wrapper for the Bananas Unity Environment provided by the Udacity
-        Deep Learning Nanodegree
-        """
-        self.env = unity_env
-        # get the default brain
-        self.brain_name = self.env.brain_names[0]
-        self.brain = self.env.brains[self.brain_name]
-        self.action_size = self.brain.vector_action_space_size
-
-        self.initial_state = self.reset()
-        self.state_size = len(self.initial_state)
-
-    @staticmethod
-    def _get_state(env_info):
-        state = env_info.vector_observations[0]
-        return state
-
-    @staticmethod
-    def _get_reward(env_info):
-        reward = env_info.rewards[0]
-        return reward
-
-    @staticmethod
-    def _get_done(env_info):
-        done = env_info.local_done[0]
-        return done
-
-    def reset(self, train_mode=True):
-        env_info = self.env.reset(train_mode)[self.brain_name]
-        return self._get_state(env_info)
-
-    def step(self, action):
-        env_info = self.env.step(action)[self.brain_name]
-        next_state = self._get_state(env_info)
-        reward = self._get_reward(env_info)
-        done = self._get_done(env_info)
-        return (next_state, reward, done, env_info)
-
-
 def main():
     #########################
     # Arguments
@@ -183,7 +143,7 @@ def main():
         base_port=base_port,
         seed=seed,
         no_graphics=True)
-    env = SimpleGymWrapper(unity_env)
+    env = Peel(unity_env)
 
     ########################
     # Agent
