@@ -3,6 +3,8 @@ Solution Code from Udacity Deep Reinforcement Learning Course
 
 Slightly modified by Ian Danforth
 """
+import sys
+import os
 import time
 import torch
 import argparse
@@ -10,9 +12,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from random import randint
 from collections import deque
-from dqn_agent import Agent
-from peel import Peel
 from unityagents import UnityEnvironment
+
+parent = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent)
+from dqn_agent import Agent
 
 
 def print_update(episode, score, duration, newline=False):
@@ -21,6 +25,16 @@ def print_update(episode, score, duration, newline=False):
         '\rEpisode {}\tScore: {:.2f}\t Duration: {:.2f}'.format(episode, score, duration),
         end=end
     )
+
+
+def remap_actions(action):
+    # 1 -> 2, 2 -> 3
+    if action > 0:
+        action += 1
+
+    assert action <= 3
+
+    return action
 
 
 def dqn(
@@ -52,9 +66,12 @@ def dqn(
         score = 0
         e_start = time.time()
         for t in range(max_t):
-            action = agent.act(state, eps)
-            action = int(action)
-            next_state, reward, done, _ = env.step(action)
+            action = 0
+            if t % 5 == 0:
+                action = agent.act(state, eps)
+                action = int(action)
+            env_action = remap_actions(action)
+            next_state, reward, done, _ = env.step(env_action)
             agent.step(state, action, reward, next_state, done)
             state = next_state
             score += reward
@@ -79,6 +96,49 @@ def dqn(
             torch.save(agent.qnetwork_local.state_dict(), filename)
             break
     return scores
+
+
+class SimpleGymWrapper(object):
+
+    def __init__(self, unity_env):
+        """
+        A thin wrapper for the Bananas Unity Environment provided by the Udacity
+        Deep Learning Nanodegree
+        """
+        self.env = unity_env
+        # get the default brain
+        self.brain_name = self.env.brain_names[0]
+        self.brain = self.env.brains[self.brain_name]
+        self.action_size = self.brain.vector_action_space_size
+
+        self.initial_state = self.reset()
+        self.state_size = len(self.initial_state)
+
+    @staticmethod
+    def _get_state(env_info):
+        state = env_info.vector_observations[0]
+        return state
+
+    @staticmethod
+    def _get_reward(env_info):
+        reward = env_info.rewards[0]
+        return reward
+
+    @staticmethod
+    def _get_done(env_info):
+        done = env_info.local_done[0]
+        return done
+
+    def reset(self, train_mode=True):
+        env_info = self.env.reset(train_mode)[self.brain_name]
+        return self._get_state(env_info)
+
+    def step(self, action):
+        env_info = self.env.step(action)[self.brain_name]
+        next_state = self._get_state(env_info)
+        reward = self._get_reward(env_info)
+        done = self._get_done(env_info)
+        return (next_state, reward, done, env_info)
 
 
 def main():
@@ -123,13 +183,13 @@ def main():
         base_port=base_port,
         seed=seed,
         no_graphics=True)
-    env = Peel(unity_env)
+    env = SimpleGymWrapper(unity_env)
 
     ########################
     # Agent
     agent = Agent(
         state_size=env.state_size,
-        action_size=env.action_size,
+        action_size=env.action_size - 1,  # No backup
         seed=seed
     )
     scores = dqn(env, agent, solve_score=solve_score, use_min=use_min)

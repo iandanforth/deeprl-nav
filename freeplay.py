@@ -58,12 +58,14 @@ def print_state(state):
     velocity = state[-2:]
     print(velocity)
 
+
 def print_ray(episode, score, duration, newline=False):
     end = None if newline else ""
     print(
         '\rEpisode {}\tAverage Score: {:.2f}\t Duration: {:.2f}'.format(episode, score, duration),
         end=end
     )
+
 
 def main():
     env = UnityEnvironment(file_name="unity/Banana_Windows_x86_64/Banana.exe")
@@ -108,7 +110,7 @@ def main():
                 action = 1
         else:
             # By default move forward
-            action = -1
+            action = 0
 
         counter += 1
         env_info = env.step(action)[brain_name]        # send the action to the environment
