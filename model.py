@@ -1,14 +1,15 @@
 """
-Solution Code from Udacity Deep Reinforcement Learning Course
+DQN Code from Udacity Deep Reinforcement Learning Course
 """
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 
 class QNetwork(nn.Module):
-    """Actor (Policy) Model."""
+    """
+    Actor (Policy) Model.
+    """
 
     def __init__(self, state_size, action_size, seed, fc1_units=64, fc2_units=64):
         """Initialize parameters and build model.

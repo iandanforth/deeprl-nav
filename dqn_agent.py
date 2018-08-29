@@ -1,5 +1,5 @@
 """
-Solution Code from Udacity Deep Reinforcement Learning Course
+DQN Code from Udacity Deep Reinforcement Learning Course
 """
 import numpy as np
 import random
@@ -109,7 +109,8 @@ class Agent():
         self.soft_update(self.qnetwork_local, self.qnetwork_target, TAU)
 
     def soft_update(self, local_model, target_model, tau):
-        """Soft update model parameters.
+        """
+        Soft update model parameters.
         θ_target = τ*θ_local + (1 - τ)*θ_target
 
         Params

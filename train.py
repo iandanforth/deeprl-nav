@@ -1,8 +1,3 @@
-"""
-Solution Code from Udacity Deep Reinforcement Learning Course
-
-Slightly modified by Ian Danforth
-"""
 import time
 import torch
 import argparse
@@ -34,7 +29,10 @@ def dqn(
     solve_score=13,
     use_min=False
 ):
-    """Deep Q-Learning.
+    """
+    DQN Code from Udacity Deep Reinforcement Learning Course
+
+    Deep Q-Learning.
 
     Params
     ======
