@@ -280,5 +280,5 @@ to contrast with the performance and robustness of a trained agent. As a consequ
 exploration we discovered that agents which meet the original criteria for solving this
 environment do not actually produce robust performance. In response we proposed an alternative
 solution criteria which would better match human style play and better select for agents with
-robust performance in this environment. Specifically that the Bananas environment is considered 
+robust performance in this environment. Specifically that the Bananas environment should be considered 
 solved when the agent maintains a minimum score of 10 for 500 episodes.
